@@ -82,6 +82,11 @@ $font-stack:     system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Robot
     }
 }
 
+.generation-error {
+    color: $accent-alt;
+    font-size: 0.875rem;
+}
+
 // ── Panels ────────────────────────────────────────────────────────────────────
 .panel-divider {
     width: 1px;
