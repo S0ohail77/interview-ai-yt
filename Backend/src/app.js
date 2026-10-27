@@ -7,9 +7,13 @@ const app = express()
 app.use(express.json())
 app.use(cookieParser())
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: "https://intergen-ai-frontend.onrender.com",
     credentials: true
 }))
+
+app.get("/", (req, res) => {
+    res.json({ status: "ok", message: "Interview AI backend is running" })
+})
 
 /* require all the routes here */
 const authRouter = require("./routes/auth.routes")
