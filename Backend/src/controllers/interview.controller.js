@@ -10,10 +10,17 @@ const interviewReportModel = require("../models/interviewReport.model")
  */
 async function generateInterViewReportController(req, res) {
 
+    const { selfDescription, jobDescription } = req.body
+
+    if (!jobDescription?.trim()) {
+        return res.status(400).json({
+            message: "Job description is required."
+        })
+    }
+
     const resumeContent = req.file
         ? await (new pdfParse.PDFParse(Uint8Array.from(req.file.buffer))).getText()
         : { text: "" }
-    const { selfDescription, jobDescription } = req.body
 
     if (!resumeContent.text && !selfDescription?.trim()) {
         return res.status(400).json({
@@ -83,7 +90,10 @@ async function getAllInterviewReportsController(req, res) {
 async function generateResumePdfController(req, res) {
     const { interviewReportId } = req.params
 
-    const interviewReport = await interviewReportModel.findById(interviewReportId)
+    const interviewReport = await interviewReportModel.findOne({
+        _id: interviewReportId,
+        user: req.user.id
+    })
 
     if (!interviewReport) {
         return res.status(404).json({

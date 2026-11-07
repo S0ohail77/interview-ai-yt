@@ -1,9 +1,13 @@
 import axios from "axios";
 
 const api = axios.create({
-    baseURL: "https://intergen-ai-backend.onrender.com",
+    baseURL: import.meta.env.DEV
+        ? "http://localhost:3000"
+        : import.meta.env.VITE_API_URL || "https://intergen-ai-backend.onrender.com",
     withCredentials: true,
 })
+
+let interviewReportsRequest
 
 
 /**
@@ -39,9 +43,15 @@ export const getInterviewReportById = async (interviewId) => {
  * @description Service to get all interview reports of logged in user.
  */
 export const getAllInterviewReports = async () => {
-    const response = await api.get("/api/interview/")
+    if (!interviewReportsRequest) {
+        interviewReportsRequest = api.get("/api/interview/")
+            .then((response) => response.data)
+            .finally(() => {
+                interviewReportsRequest = null
+            })
+    }
 
-    return response.data
+    return interviewReportsRequest
 }
 
 
